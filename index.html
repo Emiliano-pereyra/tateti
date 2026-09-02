@@ -1,0 +1,179 @@
+<!doctype html>
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Juego de Ta te ti desarrollado con JavaScript, HTML5 y CSS3 para Avature."
+    />
+    <title>Ta te ti | Avature home project</title>
+  </head>
+
+  <body>
+    <main class="contenedor-principal">
+      <section class="tarjeta-juego" aria-labelledby="titulo-juego">
+        <header class="encabezado-juego">
+          <div>
+            <p class="etiqueta-desafio">Avature home project</p>
+            <h1 id="titulo-juego">Ta te ti</h1>
+          </div>
+
+          <button
+            id="boton-repetir"
+            class="boton boton-secundario boton-repetir"
+            type="button"
+            disabled
+          >
+            Repetir últ. partida
+          </button>
+        </header>
+
+        <div class="barra-juego">
+          <div class="controles-jugadores">
+            <label class="control-jugador">
+              <span>Jugador X</span>
+              <input
+                id="nombre-jugador-x"
+                type="text"
+                maxlength="20"
+                placeholder="X"
+                autocomplete="off"
+              />
+            </label>
+        
+            <label class="control-jugador">
+              <span>Jugador O</span>
+              <input
+                id="nombre-jugador-o"
+                type="text"
+                maxlength="20"
+                placeholder="O"
+                autocomplete="off"
+              />
+            </label>
+          </div>
+        
+          <div class="controles-modo">
+            <label class="control-modo">
+              <span>Modo de juego</span>
+        
+              <select
+                id="selector-modo"
+                aria-label="Seleccionar modo de juego"
+              >
+                <option value="jugadores">Dos jugadores</option>
+                <option value="maquina">Jugar contra la máquina</option>
+              </select>
+            </label>
+        
+            <label
+              id="contenedor-dificultad"
+              class="control-modo"
+              hidden
+            >
+              <span>Dificultad</span>
+        
+              <select
+                id="selector-dificultad"
+                aria-label="Seleccionar dificultad"
+              >
+                <option value="facil">Fácil</option>
+                <option value="normal">Normal</option>
+                <option value="dificil">Difícil</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        
+        <div
+          id="panel-resultado"
+          class="panel-resultado estado-turno-x"
+          aria-live="polite"
+        >
+          <strong id="titulo-resultado">Turno de X</strong>
+          <span id="mensaje-resultado">X comienza la partida.</span>
+        </div>
+        <div
+        id="marcador"
+        class="marcador"
+        aria-live="polite"
+      >
+        <div class="marcador-item marcador-x">
+          <span id="marcador-nombre-x">Victorias JX</span>
+          <strong id="marcador-x">0</strong>
+        </div>
+      
+        <div class="marcador-item marcador-empate">
+          <span>Empates</span>
+          <strong id="marcador-empate">0</strong>
+        </div>
+      
+        <div class="marcador-item marcador-o">
+          <span id="marcador-nombre-o">Victorias JO</span>
+          <strong id="marcador-o">0</strong>
+        </div>
+      </div>
+        <div
+          id="tablero"
+          class="tablero"
+          role="grid"
+          aria-label="Tablero para Ta te ti"
+        ></div>
+        <div class="acciones-juego">
+          <button
+            id="boton-deshacer"
+            class="boton boton-secundario"
+            type="button"
+            disabled
+          >
+            Deshacer mov.
+          </button>
+        
+          <button
+            id="boton-reiniciar-principal"
+            class="boton boton-principal"
+            type="button"
+          >
+            Jugar otra vez
+          </button>
+        </div> 
+        <div
+          id="modal-resultado"
+          class="modal-overlay"
+          role="presentation"
+          hidden
+        >
+          <section
+            class="modal-victoria"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-titulo"
+          >
+            <button
+              id="boton-cerrar-modal"
+              class="boton-cerrar-modal"
+              type="button"
+              aria-label="Cerrar resultado"
+            >
+              ×
+            </button>
+        
+            <h2 id="modal-titulo">Victoria</h2>
+        
+            <p id="modal-mensaje"></p>
+        
+            <button
+              id="boton-reiniciar"
+              class="boton boton-principal"
+              type="button"
+            >
+              Jugar otra vez
+            </button>
+          </section>
+        </div>
+    </main>
+    <script type="module" src="./src/index.js"></script>
+  </body>
+</html>
