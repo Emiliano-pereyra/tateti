@@ -16,6 +16,8 @@ export class InterfazTateti {
     this.esperandoIA = false;
     this.resultadoYaRegistrado = false;
     this.movimientosActuales = [];
+    this.temporizadoresRepeticion = new Set();
+    this.temporizadorIA = null;
 
     this.configurarElementos();
     this.modal = new Modal(this.elementos.modal);
@@ -73,7 +75,7 @@ export class InterfazTateti {
     this.elementos.tablero.addEventListener("click", (evento) =>
       this.manejarMovimiento(evento),
     );
-    
+
     this.elementos.botonReiniciar.addEventListener("click", () =>
       this.iniciarPartida(),
     );
@@ -161,6 +163,23 @@ export class InterfazTateti {
     this.modal.cerrar();
     this.actualizarVista();
     this.intentarTurnoMaquina();
+  }
+
+  // Metodo para corregir bug de repeticion de partida, detiene los procesos asincronicos
+  detenerProcesosAsincronos() {
+    this.temporizadoresRepeticion.forEach((temporizador) => {
+      window.clearTimeout(temporizador);
+    });
+
+    this.temporizadoresRepeticion.clear();
+
+    if (this.temporizadorIA !== null) {
+      window.clearTimeout(this.temporizadorIA);
+      this.temporizadorIA = null;
+    }
+
+    this.reproduciendo = false;
+    this.esperandoIA = false;
   }
 
   manejarMovimiento(evento) {
@@ -282,25 +301,36 @@ export class InterfazTateti {
 
   repetirPartida() {
     const partida = this.historialPartida.obtener();
+
     if (!partida) {
       return;
     }
 
+    this.detenerProcesosAsincronos();
+
     this.reproduciendo = true;
-    this.esperandoIA = false;
     this.resultadoYaRegistrado = true;
     this.movimientosActuales = [];
+
     this.juego.reiniciar(partida.jugadorInicial);
     this.modal.cerrar();
     this.actualizarVista();
 
     partida.movimientos.forEach((indice, orden) => {
-       const timerId = window.setTimeout(
+      const temporizador = window.setTimeout(
         () => {
+          // Se elimina el temporizador una vez ejecutado
+          this.temporizadoresRepeticion.delete(temporizador);
+
+          if (!this.reproduciendo) {
+            return;
+          }
+
           this.juego.realizarMovimiento(indice);
           this.movimientosActuales.push(indice);
           this.actualizarVista();
 
+          // Ultimo movimiento de la repeticion
           if (orden === partida.movimientos.length - 1) {
             this.reproduciendo = false;
             this.actualizarControles();
@@ -309,8 +339,9 @@ export class InterfazTateti {
         },
         450 * (orden + 1),
       );
-      
-    });   
+      // Se guarda el temporizador para poder cancelarlo de ser necesario
+      this.temporizadoresRepeticion.add(temporizador);
+    });
   }
 
   procesarFinDePartida() {
